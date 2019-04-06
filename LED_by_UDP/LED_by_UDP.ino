@@ -2,7 +2,8 @@
 #include <ESP8266WiFi.h>
 
 WiFiUDP rc_ap;
-IPAddress server(192, 168, 1, 10);
+IPAddress server(192, 168, 4, 1);
+IPAddress SR(192, 168, 4, 3);
 
 const String ssid = "LOX_Point";
 const String password = "TryToKnowIt";
@@ -18,23 +19,37 @@ void setup() {
   Serial.println("");
   Serial.println("IP adress: ");
   Serial.println(WiFi.localIP());
-  myesp.begin(80);
+  rc_ap.begin(80);
 }
 
+
+String InString;
+int L;
+
 void loop() {
-  String InputSring = "";
 
   while (Serial.available() > 0) {
     int inChar =  Serial.read();
-    InputString = InputString  + (char)inChar;
-    if (inChar == '/n') {
-      Serial.print("It was sand: ");
-      Serial.println(InputString);
-      rc_ap.beginPacket(user, 80);
-      rc_ap.print(InputString);
+    char V =  (char)inChar;
+    InString = InString + V;
+    if (Serial.available() == 0) {
+      Serial.print("It was send: ");
+      Serial.println(InString);
+      rc_ap.beginPacket(server, 80);
+      rc_ap.print(InString);
       rc_ap.print("\r");
       rc_ap.endPacket();
-      InputString = "";
+      rc_ap.beginPacket(SR, 80);
+      rc_ap.print(InString);
+      rc_ap.print("\r");
+      rc_ap.endPacket();
+      
+      InString = "";
+
     }
   }
+
+
+
+
 }
