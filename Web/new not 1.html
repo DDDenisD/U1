@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Chat Form</title>
+    <link rel="stylesheet" href="DFK.css">
+  </head>
+  <body>
+    <h1>Form of Chat</h1>
+	
+	<hr>
+	<a herf = "/chat"><button>Refresh message history</button></a>
+	<hr>
+    <form action="/chat" method="post">
+      <label for="IP-field">Enter IP:
+      <input type="text" name="IP" id="IP" value="192.168.4.2"></label>
+      <br><br>
+	  <label for="Message-field">Enter message:
+      <input type="text" name="Message" id="Message" value="hallo"></label>
+	  <br><br>
+      <input type="submit" value="Send message">
+    </form>
+	<hr><br>
+	<!--There must be messages-->
+	<br>
+	
+	
+  </body>
+</html>
