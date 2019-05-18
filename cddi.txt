@@ -1,0 +1,11 @@
+   a ? 7                 ; control-g, C-g
+     b ? 8                 ; backspace, BS, C-h
+     t ? 9                 ; tab, TAB, C-i
+     n ? 10                ; newline, C-j
+     v ? 11                ; vertical tab, C-k
+     f ? 12                ; formfeed character, C-l
+     r ? 13                ; carriage return, RET, C-m
+     e ? 27                ; escape character, ESC, C-[
+     s ? 32                ; space character, SPC
+      ? 92                ; backslash character, 
+     d ? 127               ; delete character, DEL
