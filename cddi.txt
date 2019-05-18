@@ -8,4 +8,14 @@
      e ? 27                ; escape character, ESC, C-[
      s ? 32                ; space character, SPC
       ? 92                ; backslash character, 
-     d ? 127               ; delete character, DEL
+      ⇒ 7; контроль-г, к-г
+     ? \ b ⇒ 8; Backspace, <BS>, C-h
+     ? \ t ⇒ 9; вкладка, <TAB>, C-i
+     ? \ n ⇒ 10; перевод строки, C-j
+     ? \ v ⇒ 11; вертикальная вкладка, к-к
+     ? \ f ⇒ 12; персонаж при подаче, C-l
+     ? \ r ⇒ 13; возврат каретки, <RET>, к-м
+     ? \ e ⇒ 27; escape-символ, <ESC>, C- [
+     ? \ s ⇒ 32; пробел, <SPC>
+     ? \\ ⇒ 92; символ обратной косой черты, \
+     ? \ d ⇒ 127; удалить символ, <DEL>
