@@ -1,0 +1,41 @@
+const short int STAR = 3;
+String Fu = "";
+
+String BI() {
+  String RS = "";
+  while (Serial.available() > 0) {
+    delay(2);  //delay to allow byte to arrive in input buffer
+    char c = Serial.read();
+    RS += c;
+  }
+
+  if (RS.length() > 0) {
+    return RS;
+  }
+  else {
+    return "";
+  }
+}
+
+void star() {
+  Serial.println();
+  short int J = STAR;
+  for (J; J > 0; J--) {
+    Serial.print("*");
+  }
+  Serial.println();
+}
+
+void setup() {
+  Serial.begin(115200);
+  delay(100);
+}
+	
+void loop() {
+	while(Serial.available() == 0);
+	Fu = BI();
+	STAR = Fu.toInt();
+	star();
+}
+	
+	
