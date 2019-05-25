@@ -1,0 +1,301 @@
+#include <BearSSLHelpers.h>
+#include <CertStoreBearSSL.h>
+#include <ESP8266WiFi.h>
+#include <ESP8266WiFiAP.h>
+#include <ESP8266WiFiGeneric.h>
+#include <ESP8266WiFiMulti.h>
+#include <ESP8266WiFiScan.h>
+#include <ESP8266WiFiSTA.h>
+#include <ESP8266WiFiType.h>
+#include <WiFiClient.h>
+#include <WiFiClientSecure.h>
+#include <WiFiClientSecureAxTLS.h>
+#include <WiFiClientSecureBearSSL.h>
+#include <WiFiServer.h>
+#include <WiFiServerSecure.h>
+#include <WiFiServerSecureAxTLS.h>
+#include <WiFiServerSecureBearSSL.h>
+#include <WiFiUdp.h>
+
+const char* SID = "ArduinoProject";
+const char* PASS = "DoNotTellMeTheTruth";
+short int II = 0;
+String MyName;
+const short int STAR = 3; // ALARM!!!!!!!!!!!!!!!!!!!!!
+short int SL = 0;
+String INP;
+IPAddress myIP;
+WiFiServer P(8888);
+
+
+short int ana(String F) {
+  short int E = 0;
+  String H = "\\help";
+  String S = "\\sleep";
+
+
+  char L[100];
+  F.toCharArray(L, 100);
+
+  if (F == H) {
+    E = 1;
+  }
+  if (F == S) {
+    E = 2;
+  }
+  if (E == 0 && L[0] == '\\') {
+    E = 4;
+  }
+  return E;
+}
+
+String BI() {
+  String RS = "";
+  while (Serial.available() > 0) {
+    delay(2);  //delay to allow byte to arrive in input buffer
+    char c = Serial.read();
+    RS += c;
+  }
+
+  if (RS.length() > 0) {
+    return RS;
+  }
+  else {
+    return "";
+  }
+}
+
+void sleep() {
+  if (SL == 0) {
+    SL = 1;
+    sys(5, 1, 0);
+  }
+  else {
+    SL = 0;
+    sys(6, 1, 0);
+  }
+}
+
+void star() {
+  Serial.println();
+  short int J = STAR;
+  for (J; J > 0; J--) {
+    Serial.print("*");
+  }
+  Serial.println();
+}
+
+void sys(int P, bool M, int U) {
+  star();
+  switch (P) {
+    case 0:
+      Serial.print("System info was sent to ");
+      Serial.print(U);
+      break;
+    case 1:
+      Serial.print("Started trouble shooting");
+      break;
+    case 2:
+      Serial.print("System info wasn't sent to ");
+      Serial.print(U);
+      break;
+    case 3:
+      Serial.print("Configuring access point...");
+      break;
+    case 4:
+      Serial.print("Your IP address: ");
+      Serial.println(myIP);
+      break;
+    case 5:
+      Serial.print("You are in sleep mode");
+      break;
+    case 6:
+      Serial.print("You are NOT in sleep mode");
+      break;
+    case 7:
+      Serial.print("Error. Code 7");
+      break;
+    case 8:
+      Serial.print("Pleas, enter your name!");
+      break;
+    case 9:
+      Serial.print("There is no such command, pleas try something another!");
+      break;
+  }
+  Serial.println();
+  if (M) {
+    star();
+  }
+}
+
+bool TR(char* G1[], char* G2[]) {
+  bool T = 1;
+  if (sizeof(G1) != sizeof(G2)) {
+    T = 0;
+  }
+  else {
+    for (int h = 0; h < sizeof(G1);  h++) {
+      if (G1[h] != G2[h]) {
+        T = 0;
+      }
+    }
+  }
+  return T;
+}
+
+void sen(String F) {
+  short int TR[II]; // masiv
+  short int count = 0; // kolichestvo oshibok
+  short int IO = II; // nepravrlniy for
+  short int G = 0; // sostoynie
+  short int IJ; //
+  IPAddress AI[II];
+  for (short int i = 0; i < II; i++) {
+    String IR = "192, 168, 4, " + (String)i;
+    AI[i].fromString(IR);
+  }
+
+  do {
+    count = 0;
+    for (short int i = 0; i < IO; i++) {
+      WiFiClient client;
+      if (G == 0) {
+        IJ = i;
+      }
+      else {
+        IJ = TR[i];
+        sys(1, 1, 0);
+      }
+      if (AI[IJ] != myIP) {
+        if (client.connect(AI[IJ], 8888) == 1) {
+          client.print(F);
+          client.write('\r');
+          delay(5);
+          client.flush();
+          client.stop();
+          sys(0, 1, IJ);
+        }
+        else {
+          sys(2, 1, IJ);
+          TR[count] = i;
+          count++;
+        }
+      }
+      else {
+        Serial.println(F);
+      }
+    }
+    delay(100);
+    IO = count;
+    G = 1;
+  } while (count > 0);
+}
+
+void help() {
+  star();
+  Serial.print("Your name: ");
+  Serial.print(MyName);
+  Serial.println();
+  //Serial.print("Your IP: ");
+  //Serial.print(MyIP);
+  //Serial.println();
+  Serial.print("Available functions: ");
+  Serial.print("\"\\sleep and \"\\help\"");
+  Serial.println();
+  star();
+}
+
+void func(short int O, String Y) {
+  switch (O) {
+    case 0:
+      if (SL == 0) {
+        sen(Y);
+      }
+      break;
+    case 1:
+      help();
+      break;
+    case 2:
+      sleep();
+      break;
+    case 4:
+      sys(9, 1, 0);
+      break;
+  }
+}
+
+
+// It is additional platform
+
+
+void setup() {
+  Serial.begin(115200);
+  delay(100);
+
+  sys(8, 0, 0);
+  while (Serial.available() == 0);
+  MyName = BI();
+  delay(100);
+  star();
+
+  sys(3, 1, 0);
+  WiFi.begin(SID, PASS);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  myIP = WiFi.localIP();
+  sys(4, 1, 0);
+  delay(100);
+
+  P.begin();
+  delay(100);
+
+  do {
+    WiFiClient ZLE = P.available();
+    if (ZLE) {
+      while (ZLE && !ZLE.available()) {
+        delay(2);
+      }
+      String incom = ZLE.readStringUntil('\r');
+      if (SL == 0) {
+        II = incom.toInt();
+      }
+      delay(5);
+      ZLE.flush();
+      ZLE.stop();
+    }
+    delay(100);
+  } while (II == 0);
+}
+
+void loop() {
+
+  String OUT;
+  const String OUT1 = MyName + ": ";
+  if (Serial.available() > 0) {
+    OUT = BI();
+    short int A = ana(OUT);
+    OUT = OUT1 + OUT;
+    func(A, OUT);
+  }
+
+
+
+
+  WiFiClient ZLE = P.available();
+  if (ZLE) {
+    while (ZLE && !ZLE.available()) {
+      delay(2);
+    }
+    String incom = ZLE.readStringUntil('\r');
+    if (SL == 0) {
+      Serial.println(incom);
+    }
+    delay(5);
+    ZLE.flush();
+    ZLE.stop();
+  }
+
+
+}
