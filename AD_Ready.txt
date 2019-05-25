@@ -150,7 +150,7 @@ void sen(String F) {
   short int G = 0; // sostoynie
   short int IJ; //
   IPAddress AI[II];
-  for (short int i = 0; i < II; i++) {
+  for (short int i = 1; i <= II; i++) {
     String IR = "192, 168, 4, " + (String)i;
     AI[i].fromString(IR);
   }
